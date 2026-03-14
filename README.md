@@ -1,82 +1,80 @@
-# T.57 — DevOps Agent
+# RepoGuardian
 
 > Multi-agent AI tool that scans GitHub repositories for security vulnerabilities, code quality issues, and documentation gaps.
 
 ```
- _____ ___ _____
-|_   _| ____|___  |
-  | | |  _|   / /
-  | | |___|  / /
-  |_|      /_/
-  DEVOPS AGENT
+ ____                   ____                     _ _
+|  _ \ ___ _ __   ___  / ___|_   _  __ _ _ __ __| (_) __ _ _ __
+| |_) / _ \ '_ \ / _ \| |  _| | | |/ _` | '__/ _` | |/ _` | '_ \
+|  _ <  __/ |_) | (_) | |_| | |_| | (_| | | | (_| | | (_| | | | |
+|_| \_\___| .__/ \___/ \____|\__,_|\__,_|_|  \__,_|_|\__,_|_| |_|
+          |_|
 ```
 
 ## Quick Start
 
-### Frontend (Next.js)
+### Deploy to Vercel (Recommended)
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FXeyrill%2FT.57)
+
+Or via CLI:
 ```bash
-cd devops-agent
-npm install
-npm run dev
-# → http://localhost:3000
+npx vercel
 ```
 
-### Backend (FastAPI)
+### Run Locally
 
 ```bash
-cd devops-agent/backend
-pip install -r requirements.txt
-cp ../.env.example ../.env  # add your keys
-uvicorn main:app --reload --port 8000
+git clone https://github.com/Xeyrill/T.57.git
+cd T.57
+npm install
+npm run dev
+# -> http://localhost:3000
 ```
 
 ## How It Works
 
 1. **Paste** a public GitHub repo URL
-2. **Three agents** run concurrently:
-   - 🛡️ **Security Agent** — SQL injection, hardcoded secrets, vulnerable deps
-   - ⚡ **Quality Agent** — cyclomatic complexity, code smells, long functions
-   - 📄 **Docs Agent** — README quality, docstrings, inline comments
-3. **Results** merged with weighted scoring (Security 40%, Quality 35%, Docs 25%)
+2. **Three agents** scan concurrently:
+   - 🛡️ **Security Agent** — SQL injection, hardcoded secrets, eval/exec, command injection
+   - ⚡ **Quality Agent** — function length, nesting depth, complexity, comments
+   - 📄 **Docs Agent** — README quality, docstrings, JSDoc coverage
+3. **Weighted scoring**: Security 40% | Quality 35% | Docs 25%
 
 ## Architecture
 
 ```
-Frontend (Next.js)
-  └─ /api/analyze (proxy)
-       └─ FastAPI Backend
-            ├─ GitHub API → fetch repo files
-            └─ asyncio.gather(
-                 security_agent(),
-                 quality_agent(),
-                 docs_agent()
-               ) → merge → respond
+Next.js App (Vercel Serverless)
+  └─ /api/analyze (POST)
+       ├─ GitHub REST API → fetch repo files
+       ├─ securityAgent(files)
+       ├─ qualityAgent(files)
+       ├─ docsAgent(files)
+       └─ mergeResults() → respond
 ```
+
+Everything runs as a **single Vercel serverless function** — no separate backend needed.
+
+## Environment Variables (Optional)
+
+| Variable | Description |
+|---|---|
+| `GITHUB_TOKEN` | Increases GitHub API rate limit (60 → 5000 reqs/hr) |
+| `OPENAI_API_KEY` | Enables AI-powered analysis (future enhancement) |
 
 ## Tech Stack
 
 | Layer | Tech |
 |---|---|
-| Frontend | Next.js 16, Tailwind CSS v4, TypeScript |
-| Backend | FastAPI, Python 3.11+ |
-| AI | OpenAI GPT-4o-mini (or rule-based fallback) |
+| Framework | Next.js 16, TypeScript, Tailwind CSS v4 |
+| Deploy | Vercel (zero-config) |
+| Design | Monotone vintage + Gen Z street art |
 | Fonts | Anton (stencil), Space Mono |
-
-## Environment Variables
-
-| Variable | Required | Description |
-|---|---|---|
-| `OPENAI_API_KEY` | Optional | Enables AI-powered analysis (falls back to rule-based) |
-| `GITHUB_TOKEN` | Optional | Increases GitHub API rate limit |
 
 ## Team
 
-**Team 57** — Hackathon build
+**Team 57** — Built by Xeyrill
 
-## Git Workflow
+## Contributing
 
-1. Create a branch: `git checkout -b feature/your-feature`
-2. Make changes & commit
-3. Push & create a Pull Request
-4. Get review → merge to `main`
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions and git workflow.

@@ -1,5 +1,5 @@
 {
-  "name": "devops-agent",
+  "name": "repoguardian",
   "version": "0.1.0",
   "private": true,
   "scripts": {

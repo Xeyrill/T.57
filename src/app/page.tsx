@@ -62,7 +62,6 @@ export default function Home() {
                               radial-gradient(circle at 85% 80%, rgba(255,255,255,0.01) 0%, transparent 30%)`,
           }}
         />
-        {/* Subtle grid lines like brick */}
         <div className="absolute inset-0 opacity-[0.02]"
           style={{
             backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
@@ -78,9 +77,9 @@ export default function Home() {
         <nav className="flex items-center justify-between px-8 py-6">
           <div className="flex items-center gap-3">
             <div className="stencil-text text-lg text-chalk tracking-[4px]">
-              T.57
+              REPOGUARDIAN
             </div>
-            <span className="text-faded text-xs tracking-wider">// DEVOPS AGENT</span>
+            <span className="text-faded text-xs tracking-wider">// T.57</span>
           </div>
           <div className="flex items-center gap-4">
             <span className="text-xs text-faded font-mono tracking-wide animate-tag-flicker">
@@ -102,14 +101,14 @@ export default function Home() {
               </span>
             </div>
 
-            {/* Main heading — stencil graffiti style */}
+            {/* Main heading */}
             <div className="animate-glitch mb-2">
               <h1 className="stencil-text text-center text-6xl leading-none text-chalk md:text-8xl lg:text-9xl">
-                ANALYZE
+                GUARD
               </h1>
             </div>
             <h1 className="stencil-text mb-3 text-center text-6xl leading-none text-faded/40 md:text-8xl lg:text-9xl animate-spray-reveal">
-              SECURE
+              ANALYZE
             </h1>
             <h1 className="stencil-text text-center text-6xl leading-none text-chalk md:text-8xl lg:text-9xl animate-spray-reveal" style={{ animationDelay: '0.2s' }}>
               SHIP IT
@@ -117,14 +116,14 @@ export default function Home() {
 
             {/* Tagline */}
             <p className="handwritten mt-8 mb-12 max-w-lg text-center text-sm text-faded leading-relaxed">
-              &quot;three agents scan your code for vulnerabilities, bad patterns,
-              and missing documentation — so you can ship fearlessly.&quot;
+              &quot;three agents guard your repo against vulnerabilities, bad patterns,
+              and missing docs &mdash; so you ship fearlessly.&quot;
             </p>
 
-            {/* ─── Input: spray-stencil box ─── */}
+            {/* ─── Input ─── */}
             <div className="relative w-full max-w-xl animate-fade-up" style={{ animationDelay: '0.4s' }}>
               <div className="flex items-center gap-2 rounded-none border-2 border-dashed border-stencil/20 bg-charcoal p-1.5 transition-all duration-300 focus-within:border-stencil/50">
-                <span className="pl-3 text-faded/40 text-sm font-mono">→</span>
+                <span className="pl-3 text-faded/40 text-sm font-mono">&rarr;</span>
                 <input
                   id="github-url-input"
                   type="url"
@@ -144,11 +143,10 @@ export default function Home() {
                   {loading ? "SCANNING" : "ANALYZE"}
                 </button>
               </div>
-              {/* Rough underline drip */}
               <div className="mt-1 h-[2px] w-full bg-gradient-to-r from-faded/20 via-faded/5 to-transparent" />
             </div>
 
-            {/* Feature tags — like stickers on a wall */}
+            {/* Feature tags */}
             <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
               {[
                 { label: "SECURITY", delay: "0.5s", rot: "-1.5deg" },
@@ -168,26 +166,24 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Bottom marker scribble */}
+            {/* Footer scribble */}
             <div className="mt-16 text-center">
               <span className="handwritten text-xs text-faded/30">
-                // team 57 — built for hackathons
+                // repoguardian by team 57
               </span>
             </div>
           </section>
         )}
 
-        {/* ─── Loading Overlay: spray-paint reveal ─── */}
+        {/* ─── Loading Overlay ─── */}
         {loading && (
           <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-charcoal/95">
-            {/* Scanning animation */}
             <div className="relative mb-10">
               <div className="h-20 w-20 border-2 border-dashed border-stencil/30 animate-[spin_4s_linear_infinite]" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="stencil-text text-2xl text-chalk animate-tag-flicker">⊘</span>
+                <span className="stencil-text text-2xl text-chalk animate-tag-flicker">&#x2298;</span>
               </div>
             </div>
-
             <p className="stencil-text text-2xl tracking-[8px] text-chalk animate-spray-reveal">
               SCANNING
             </p>
@@ -196,15 +192,9 @@ export default function Home() {
               <span className="animate-spray-reveal" style={{ animationDelay: '0.6s' }}>quality</span>
               <span className="animate-spray-reveal" style={{ animationDelay: '0.9s' }}>documentation</span>
             </div>
-
-            {/* Dot progress */}
             <div className="mt-8 flex gap-2">
               {[...Array(5)].map((_, i) => (
-                <div
-                  key={i}
-                  className="h-1 w-8 bg-faded/20 animate-spray-reveal"
-                  style={{ animationDelay: `${1 + i * 0.4}s` }}
-                >
+                <div key={i} className="h-1 w-8 bg-faded/20 animate-spray-reveal" style={{ animationDelay: `${1 + i * 0.4}s` }}>
                   <div className="h-full w-full bg-chalk animate-tag-flicker" style={{ animationDelay: `${i * 0.2}s` }} />
                 </div>
               ))}
@@ -224,7 +214,7 @@ export default function Home() {
                     onClick={() => { setError(null); setResult(null); }}
                     className="mt-3 text-sm font-mono text-chalk/60 hover:text-chalk underline decoration-dashed underline-offset-4"
                   >
-                    ← try again
+                    &larr; try again
                   </button>
                 </div>
               </div>

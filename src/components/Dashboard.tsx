@@ -221,7 +221,7 @@ export default function Dashboard({ result, repoUrl, onReset }: DashboardProps) 
             {/* ─── Footer scribble ─── */}
             <div className="text-center pb-8">
                 <span className="handwritten text-[10px] text-faded/20">
-          // t.57 devops agent — end of report
+          // repoguardian by t.57 — end of report
                 </span>
             </div>
         </div>

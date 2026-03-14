@@ -9,9 +9,9 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DevOps Agent — T.57 // Repo Intelligence",
+  title: "RepoGuardian — AI-Powered Repository Analysis",
   description:
-    "Multi-agent DevOps tool that reviews repositories, detects vulnerabilities, and maintains code health. Built by Team 57.",
+    "Multi-agent AI tool that scans GitHub repositories for security vulnerabilities, code quality issues, and documentation gaps. Built by Team 57.",
 };
 
 export default function RootLayout({
