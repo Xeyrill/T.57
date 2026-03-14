@@ -437,7 +437,10 @@ def merge_agent_results(
     recommendations = _generate_recommendations(all_issues, sec_score, qual_score, docs_score)
 
     return {
-        "score": weighted_score,
+        "overall_score": weighted_score,
+        "security_score": sec_score,
+        "quality_score": qual_score,
+        "docs_score": docs_score,
         "issues": all_issues,
         "recommendations": recommendations,
     }

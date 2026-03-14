@@ -46,7 +46,10 @@ class Issue(BaseModel):
 
 
 class AnalysisResult(BaseModel):
-    score: int
+    overall_score: int
+    security_score: int
+    quality_score: int
+    docs_score: int
     issues: list[Issue]
     recommendations: list[str]
 

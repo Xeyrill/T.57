@@ -11,7 +11,10 @@ interface Issue {
 }
 
 interface AnalysisResult {
-  score: number;
+  overall_score: number;
+  security_score: number;
+  quality_score: number;
+  docs_score: number;
   issues: Issue[];
   recommendations: string[];
 }

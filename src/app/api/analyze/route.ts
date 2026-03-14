@@ -35,7 +35,10 @@ export async function POST(request: NextRequest) {
 
         // If backend is not running, return mock data for demo purposes
         const mockResult = {
-            score: 42,
+            overall_score: 42,
+            security_score: 25,
+            quality_score: 45,
+            docs_score: 60,
             issues: [
                 {
                     type: "security",

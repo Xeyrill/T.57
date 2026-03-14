@@ -10,7 +10,10 @@ interface Issue {
 }
 
 interface AnalysisResult {
-    score: number;
+    overall_score: number;
+    security_score: number;
+    quality_score: number;
+    docs_score: number;
     issues: Issue[];
     recommendations: string[];
 }
@@ -22,12 +25,12 @@ interface DashboardProps {
 }
 
 /* ─── Hand-drawn health ring (monotone) ─── */
-function HealthRing({ score }: { score: number }) {
+function HealthRing({ score, label }: { score: number; label: string }) {
     const [offset, setOffset] = useState(283);
     const circumference = 283;
     const target = circumference - (score / 100) * circumference;
 
-    const label = score > 80 ? "CLEAN" : score >= 50 ? "FAIR" : "DIRTY";
+    const grade = score > 80 ? "CLEAN" : score >= 50 ? "FAIR" : "DIRTY";
 
     useEffect(() => {
         const timer = setTimeout(() => setOffset(target), 100);
@@ -37,22 +40,14 @@ function HealthRing({ score }: { score: number }) {
     return (
         <div className="flex flex-col items-center">
             <div className="relative">
-                <svg width="160" height="160" viewBox="0 0 100 100" className="-rotate-90">
+                <svg width="140" height="140" viewBox="0 0 100 100" className="-rotate-90">
                     <defs>
-                        {/* Rough / hand-drawn filter */}
-                        <filter id="roughen">
+                        <filter id={`roughen-${label}`}>
                             <feTurbulence type="turbulence" baseFrequency="0.04" numOctaves="4" result="noise" />
                             <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" />
                         </filter>
                     </defs>
-                    {/* Background ring */}
-                    <circle
-                        cx="50" cy="50" r="45"
-                        fill="none"
-                        stroke="rgba(255,255,255,0.06)"
-                        strokeWidth="4"
-                    />
-                    {/* Score arc — monotone white/gray */}
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="4" />
                     <circle
                         cx="50" cy="50" r="45"
                         fill="none"
@@ -61,16 +56,16 @@ function HealthRing({ score }: { score: number }) {
                         strokeLinecap="square"
                         strokeDasharray={circumference}
                         strokeDashoffset={offset}
-                        filter="url(#roughen)"
+                        filter={`url(#roughen-${label})`}
                         style={{ transition: "stroke-dashoffset 1.5s ease-out" }}
                     />
                 </svg>
-                {/* Score number */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="stencil-text text-4xl text-chalk">{score}</span>
-                    <span className="severity-tag text-faded/60 mt-1">{label}</span>
+                    <span className="stencil-text text-3xl text-chalk">{score}</span>
+                    <span className="severity-tag text-faded/60 mt-0.5 text-[8px]">{grade}</span>
                 </div>
             </div>
+            <p className="severity-tag text-faded/40 mt-2">{label}</p>
         </div>
     );
 }
@@ -80,7 +75,6 @@ function IssueCard({ issue, index }: { issue: Issue; index: number }) {
     const isHigh = issue.severity.toLowerCase() === "high";
     const isMedium = issue.severity.toLowerCase() === "medium";
 
-    // Random slight rotation for "slapped on wall" look
     const rotations = [-1.5, 0.8, -0.5, 1.2, -0.8, 0.5, -1, 0.3];
     const rot = rotations[index % rotations.length];
 
@@ -106,12 +100,8 @@ function IssueCard({ issue, index }: { issue: Issue; index: number }) {
     return (
         <div
             className={`sticker-panel ${borderAccent} p-5 animate-sticker-peel opacity-0 cursor-default`}
-            style={{
-                animationDelay: `${index * 0.1}s`,
-                transform: `rotate(${rot}deg)`,
-            }}
+            style={{ animationDelay: `${index * 0.1}s`, transform: `rotate(${rot}deg)` }}
         >
-            {/* Header */}
             <div className="flex items-center justify-between mb-3">
                 <span className="severity-tag text-faded/50">
                     {typeLabels[issue.type.toLowerCase()] || "---"}
@@ -120,18 +110,10 @@ function IssueCard({ issue, index }: { issue: Issue; index: number }) {
                     {issue.severity.toUpperCase()}
                 </span>
             </div>
-
-            {/* Message */}
-            <p className="text-xs text-aged-paper/80 leading-relaxed mb-4 font-mono">
-                {issue.message}
-            </p>
-
-            {/* File path */}
+            <p className="text-xs text-aged-paper/80 leading-relaxed mb-4 font-mono">{issue.message}</p>
             <div className="flex items-center gap-2 border-t border-faded/10 pt-3">
                 <span className="text-faded/30 text-xs">→</span>
-                <span className="text-[10px] text-faded/50 font-mono truncate">
-                    {issue.file}
-                </span>
+                <span className="text-[10px] text-faded/50 font-mono truncate">{issue.file}</span>
             </div>
         </div>
     );
@@ -157,36 +139,45 @@ export default function Dashboard({ result, repoUrl, onReset }: DashboardProps) 
                     <h2 className="stencil-text text-3xl text-chalk tracking-[4px]">REPORT</h2>
                     <p className="mt-2 text-xs text-faded/40 font-mono">{repoUrl}</p>
                 </div>
-                <span className="severity-tag text-faded/40 animate-tag-flicker">
-                    ● COMPLETE
-                </span>
+                <span className="severity-tag text-faded/40 animate-tag-flicker">● COMPLETE</span>
             </div>
 
-            {/* ─── Score + Stats ─── */}
+            {/* ─── Per-Agent Score Rings ─── */}
             <div className="mb-10 grid grid-cols-1 md:grid-cols-4 gap-5">
-                {/* Health Ring */}
-                <div className="sticker-panel flex items-center justify-center p-8">
-                    <HealthRing score={result.score} />
+                {/* Overall score (larger) */}
+                <div className="sticker-panel flex flex-col items-center justify-center p-6">
+                    <HealthRing score={result.overall_score} label="OVERALL" />
                 </div>
 
-                {/* Stat blocks */}
-                <div className="md:col-span-3 grid grid-cols-3 gap-4">
-                    {[
-                        { label: "HIGH", count: highCount, note: "fix now" },
-                        { label: "MEDIUM", count: mediumCount, note: "soon" },
-                        { label: "LOW", count: lowCount, note: "minor" },
-                    ].map((stat, i) => (
-                        <div
-                            key={stat.label}
-                            className="sticker-panel p-6 animate-sticker-peel opacity-0"
-                            style={{ animationDelay: `${0.2 + i * 0.15}s` }}
-                        >
-                            <p className="severity-tag text-faded/40 mb-2">{stat.label}</p>
-                            <p className="stencil-text text-4xl text-chalk">{stat.count}</p>
-                            <p className="handwritten text-[10px] mt-2">{stat.note}</p>
-                        </div>
-                    ))}
+                {/* Per-agent rings */}
+                <div className="sticker-panel flex items-center justify-center p-6 animate-sticker-peel opacity-0" style={{ animationDelay: "0.1s" }}>
+                    <HealthRing score={result.security_score} label="SECURITY" />
                 </div>
+                <div className="sticker-panel flex items-center justify-center p-6 animate-sticker-peel opacity-0" style={{ animationDelay: "0.2s" }}>
+                    <HealthRing score={result.quality_score} label="QUALITY" />
+                </div>
+                <div className="sticker-panel flex items-center justify-center p-6 animate-sticker-peel opacity-0" style={{ animationDelay: "0.3s" }}>
+                    <HealthRing score={result.docs_score} label="DOCS" />
+                </div>
+            </div>
+
+            {/* ─── Severity Summary ─── */}
+            <div className="mb-10 grid grid-cols-3 gap-4">
+                {[
+                    { label: "HIGH", count: highCount, note: "fix now" },
+                    { label: "MEDIUM", count: mediumCount, note: "soon" },
+                    { label: "LOW", count: lowCount, note: "minor" },
+                ].map((stat, i) => (
+                    <div
+                        key={stat.label}
+                        className="sticker-panel p-5 animate-sticker-peel opacity-0"
+                        style={{ animationDelay: `${0.4 + i * 0.1}s` }}
+                    >
+                        <p className="severity-tag text-faded/40 mb-2">{stat.label}</p>
+                        <p className="stencil-text text-3xl text-chalk">{stat.count}</p>
+                        <p className="handwritten text-[10px] mt-1">{stat.note}</p>
+                    </div>
+                ))}
             </div>
 
             {/* ─── Issues Grid ─── */}
