@@ -1,0 +1,354 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* ─── Monotone Vintage Palette ─── */
+  --color-charcoal: #1A1A1A;
+  --color-asphalt: #252525;
+  --color-concrete: #333333;
+  --color-slate-wall: #444444;
+  --color-chalk: #E8E8E8;
+  --color-aged-paper: #E0DDD5;
+  --color-faded: #999999;
+  --color-tag-white: #F5F5F0;
+  --color-stencil: #CCCCCC;
+  --color-rust: #8B7355;
+  --color-warn-flash: #FF6B6B;
+
+  /* ─── Shadows ─── */
+  --shadow-sticker: 2px 3px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --shadow-tag: 4px 4px 0px rgba(0, 0, 0, 0.8);
+  --shadow-lifted: 0 12px 30px rgba(0, 0, 0, 0.6);
+
+  /* ─── Street Art Animations ─── */
+  --animate-glitch: glitch 2.5s ease-in-out infinite;
+  --animate-spray-reveal: spray-reveal 0.8s ease-out forwards;
+  --animate-drip: drip 1.2s ease-in forwards;
+  --animate-sticker-peel: sticker-peel 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  --animate-tag-flicker: tag-flicker 3s ease-in-out infinite;
+  --animate-grain: grain 0.5s steps(6) infinite;
+  --animate-fade-up: fade-up 0.5s ease-out forwards;
+  --animate-marker-draw: marker-draw 0.8s ease-out forwards;
+}
+
+/* ─── Glitch: text distortion jitter ─── */
+@keyframes glitch {
+
+  0%,
+  100% {
+    transform: translate(0);
+    filter: none;
+  }
+
+  2% {
+    transform: translate(-2px, 1px) skewX(-1deg);
+    filter: hue-rotate(90deg);
+  }
+
+  4% {
+    transform: translate(2px, -1px) skewX(1deg);
+  }
+
+  6% {
+    transform: translate(0);
+    filter: none;
+  }
+
+  42% {
+    transform: translate(0);
+  }
+
+  43% {
+    transform: translate(-3px, 0) skewX(-2deg);
+    filter: brightness(1.2);
+  }
+
+  44% {
+    transform: translate(3px, 1px);
+  }
+
+  45% {
+    transform: translate(0);
+    filter: none;
+  }
+
+  80% {
+    transform: translate(0);
+  }
+
+  81% {
+    transform: translate(1px, -1px) skewX(1deg);
+  }
+
+  82% {
+    transform: translate(0);
+  }
+}
+
+/* ─── Spray paint reveal ─── */
+@keyframes spray-reveal {
+  0% {
+    opacity: 0;
+    filter: blur(20px);
+    transform: scale(0.9);
+  }
+
+  60% {
+    filter: blur(4px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+/* ─── Paint drip ─── */
+@keyframes drip {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ─── Sticker peel onto wall ─── */
+@keyframes sticker-peel {
+  0% {
+    transform: perspective(800px) rotateY(90deg) scale(0.8);
+    opacity: 0;
+  }
+
+  60% {
+    transform: perspective(800px) rotateY(-5deg) scale(1.02);
+  }
+
+  100% {
+    transform: perspective(800px) rotateY(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ─── Dying neon flicker ─── */
+@keyframes tag-flicker {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  5% {
+    opacity: 0.4;
+  }
+
+  6% {
+    opacity: 1;
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  41% {
+    opacity: 0.6;
+  }
+
+  42% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  71% {
+    opacity: 0.3;
+  }
+
+  72% {
+    opacity: 0.8;
+  }
+
+  73% {
+    opacity: 1;
+  }
+}
+
+/* ─── Film grain ─── */
+@keyframes grain {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  16% {
+    transform: translate(-5%, -10%);
+  }
+
+  33% {
+    transform: translate(5%, 5%);
+  }
+
+  50% {
+    transform: translate(-10%, 5%);
+  }
+
+  66% {
+    transform: translate(5%, -5%);
+  }
+
+  83% {
+    transform: translate(-5%, 10%);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* ─── Fade up entrance ─── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Marker drawing stroke ─── */
+@keyframes marker-draw {
+  from {
+    stroke-dashoffset: 100%;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ═══════════ BASE STYLES ═══════════ */
+
+body {
+  background-color: #1A1A1A;
+  color: #E0DDD5;
+  font-family: 'Space Mono', 'Courier New', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── Film grain overlay ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  animation: grain 0.5s steps(6) infinite;
+}
+
+/* ─── Grunge texture on surfaces ─── */
+.wall-texture {
+  background-color: #252525;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.015) 0%, transparent 40%);
+  position: relative;
+}
+
+/* ─── Glass panel → now "sticker" panel ─── */
+.sticker-panel {
+  background: rgba(40, 40, 40, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.sticker-panel:hover {
+  transform: rotate(0deg) translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ─── Spray stencil input ─── */
+.stencil-input {
+  background: rgba(30, 30, 30, 0.8);
+  border: 2px dashed rgba(200, 200, 200, 0.2);
+  border-radius: 2px;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.stencil-input:focus {
+  border-color: rgba(200, 200, 200, 0.5);
+  outline: none;
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.03);
+}
+
+/* ─── Tag / badge styling ─── */
+.severity-tag {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.65rem;
+}
+
+/* ─── Handwritten note style ─── */
+.handwritten {
+  font-family: 'Space Mono', monospace;
+  font-style: italic;
+  opacity: 0.7;
+  letter-spacing: 0.3px;
+}
+
+/* ─── Stencil text ─── */
+.stencil-text {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+/* ─── Rough underline ─── */
+.rough-underline {
+  text-decoration: none;
+  background-image: linear-gradient(90deg, #E0DDD5 0%, #999 100%);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 2px;
+  padding-bottom: 2px;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1A1A1A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
